@@ -21,7 +21,7 @@
 
 ## 截图
 
-<img src="screenshots/inbox.png" width="200" /> <img src="screenshots/calendar.png" width="200" /> <img src="screenshots/matrix.png" width="200" />
+<img src="screenshots/inbox.jpg" width="200" /> <img src="screenshots/calendar.jpg" width="200" /> <img src="screenshots/matrix.jpg" width="200" />
 
 ## 构建运行
 
