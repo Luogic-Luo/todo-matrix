@@ -114,4 +114,27 @@ class TaskRepositoryImpl implements TaskRepository {
     }
     await _datasource.updateSortOrders(updates);
   }
+
+  @override
+  Future<void> reorderInboxTasks(
+    int oldIndex,
+    int newIndex,
+  ) async {
+    final tasks = await _datasource.getByStatus(TaskStatus.inbox.name);
+    if (tasks.isEmpty) return;
+
+    final mutableList = tasks.toList();
+    final moved = mutableList.removeAt(oldIndex);
+    if (newIndex > oldIndex) newIndex--;
+    mutableList.insert(newIndex, moved);
+
+    final updates = <Map<String, dynamic>>[];
+    for (var i = 0; i < mutableList.length; i++) {
+      updates.add({
+        'id': mutableList[i].id,
+        'sort_order': i,
+      });
+    }
+    await _datasource.updateSortOrders(updates);
+  }
 }

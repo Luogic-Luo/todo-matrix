@@ -2,10 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gap/gap.dart';
 import '../../../../domain/entities/task.dart';
-import '../../../../domain/enums/task_priority.dart';
+import '../../../../domain/enums/eisenhower_quadrant.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/empty_state_widget.dart';
 import '../../../shared_widgets/priority_badge.dart';
+
+Color _quadrantColor(EisenhowerQuadrant quadrant, ThemeData theme) {
+  return switch (quadrant) {
+    EisenhowerQuadrant.doFirst => Colors.red,
+    EisenhowerQuadrant.schedule => const Color(0xFFD4A017),
+    EisenhowerQuadrant.delegate => Colors.blue,
+    EisenhowerQuadrant.eliminate => Colors.green,
+  };
+}
 
 class DayTaskList extends StatelessWidget {
   final List<Task> tasks;
@@ -64,7 +73,7 @@ class CalendarTaskTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: task.isCompleted
                       ? theme.colorScheme.outline
-                      : _priorityColor(task.priority, theme),
+                      : _quadrantColor(task.quadrant, theme),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                 ),
               ),
@@ -105,12 +114,4 @@ class CalendarTaskTile extends StatelessWidget {
     );
   }
 
-  Color _priorityColor(TaskPriority priority, ThemeData theme) {
-    return switch (priority) {
-      TaskPriority.p1 => Colors.red,
-      TaskPriority.p2 => Colors.orange,
-      TaskPriority.p3 => Colors.green,
-      TaskPriority.p4 => theme.colorScheme.outline,
-    };
-  }
 }

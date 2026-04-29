@@ -34,4 +34,9 @@ abstract class TaskRepository {
     int oldIndex,
     int newIndex,
   );
+
+  Future<void> reorderInboxTasks(
+    int oldIndex,
+    int newIndex,
+  );
 }

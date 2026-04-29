@@ -22,7 +22,7 @@ final allTasksProvider = AutoDisposeFutureProvider<List<Task>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AllTasksRef = AutoDisposeFutureProviderRef<List<Task>>;
-String _$inboxTasksHash() => r'145caf333c10bac1485c4ea9e9cb91c9c2e2da4d';
+String _$inboxTasksHash() => r'e07535135043c8f7343d0d697bcca7bbc1b4a4bb';
 
 /// See also [inboxTasks].
 @ProviderFor(inboxTasks)
@@ -38,7 +38,7 @@ final inboxTasksProvider = AutoDisposeFutureProvider<List<Task>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef InboxTasksRef = AutoDisposeFutureProviderRef<List<Task>>;
-String _$tasksByQuadrantHash() => r'2b95e7ed1853b67a4bccda63c693986f59bf65ce';
+String _$tasksByQuadrantHash() => r'f9e470828a288b2ee43cfcd54b7f1ae0c07d247e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -191,7 +191,7 @@ class _TasksByQuadrantProviderElement
       (origin as TasksByQuadrantProvider).quadrant;
 }
 
-String _$tasksByDateHash() => r'e605a7bf85c58657b2a6359d58245f221ab4df79';
+String _$tasksByDateHash() => r'0738319a0b19499931b006695ecbd8f01164a323';
 
 /// See also [tasksByDate].
 @ProviderFor(tasksByDate)
@@ -466,7 +466,7 @@ class _TaskByIdProviderElement extends AutoDisposeFutureProviderElement<Task?>
   String get id => (origin as TaskByIdProvider).id;
 }
 
-String _$taskActionsHash() => r'5f502dd27d7b9bd2bd9707b624aa71296d693157';
+String _$taskActionsHash() => r'e12fe62f207e9c8c32f96343efd74be64f625cb5';
 
 /// See also [TaskActions].
 @ProviderFor(TaskActions)

@@ -4,10 +4,20 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:gap/gap.dart';
 import '../../../../domain/entities/task.dart';
+import '../../../../domain/enums/eisenhower_quadrant.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../shared_widgets/completion_checkbox.dart';
 import '../../../shared_widgets/priority_badge.dart';
 import '../../../providers/task_providers.dart';
+
+Color _quadrantColor(EisenhowerQuadrant quadrant, ThemeData theme) {
+  return switch (quadrant) {
+    EisenhowerQuadrant.doFirst => Colors.red,
+    EisenhowerQuadrant.schedule => const Color(0xFFD4A017),
+    EisenhowerQuadrant.delegate => Colors.blue,
+    EisenhowerQuadrant.eliminate => Colors.green,
+  };
+}
 
 class InboxTaskTile extends ConsumerWidget {
   final Task task;
@@ -44,6 +54,17 @@ class InboxTaskTile extends ConsumerWidget {
             padding: const EdgeInsets.all(AppDimensions.paddingM),
             child: Row(
               children: [
+                Container(
+                  width: 4,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: task.isCompleted
+                        ? theme.colorScheme.outline
+                        : _quadrantColor(task.quadrant, theme),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+                  ),
+                ),
+                const Gap(AppDimensions.paddingM),
                 CompletionCheckbox(
                   isCompleted: task.isCompleted,
                   onToggle: () =>

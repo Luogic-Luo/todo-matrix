@@ -42,7 +42,7 @@ class TaskForm extends StatelessWidget {
             labelText: '标题',
           ),
           textCapitalization: TextCapitalization.sentences,
-          autofocus: true,
+          autofocus: false,
         ),
         const Gap(AppDimensions.paddingL),
         TextField(
@@ -156,7 +156,7 @@ class TaskForm extends StatelessWidget {
           children: EisenhowerQuadrant.values.map((q) {
             final isSelected = q == quadrant;
             return ChoiceChip(
-              label: Text(q.label),
+              label: Text(q.description),
               selected: isSelected,
               onSelected: (_) => onQuadrantChanged(q),
             );

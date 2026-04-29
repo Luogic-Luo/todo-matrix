@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gap/gap.dart';
@@ -37,6 +38,12 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
   bool _isInitialized = false;
 
   bool get _isEditing => widget.mode == TaskDetailMode.edit;
+
+  void _dismissKeyboard() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    FocusScope.of(context).unfocus();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
 
   @override
   void initState() {
@@ -123,6 +130,13 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
   Widget _buildScaffold() {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            _dismissKeyboard();
+            context.pop();
+          },
+        ),
         title: Text(_isEditing ? '编辑任务' : AppStrings.newTask),
         actions: [
           if (_isEditing)
@@ -132,34 +146,38 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
             ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppDimensions.paddingL),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TaskForm(
-              titleCtrl: _titleCtrl,
-              descCtrl: _descCtrl,
-              dueDate: _dueDate,
-              priority: _priority,
-              quadrant: _quadrant,
-              onDueDateChanged: (date) => setState(() => _dueDate = date),
-              onPriorityChanged: (p) => setState(() => _priority = p),
-              onQuadrantChanged: (q) => setState(() => _quadrant = q),
-            ),
-            const Gap(AppDimensions.paddingXl),
-            FilledButton.icon(
-              onPressed: _isLoading ? null : _save,
-              icon: _isLoading
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.check),
-              label: Text(_isEditing ? AppStrings.save : '创建任务'),
-            ),
-          ],
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: _dismissKeyboard,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppDimensions.paddingL),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TaskForm(
+                titleCtrl: _titleCtrl,
+                descCtrl: _descCtrl,
+                dueDate: _dueDate,
+                priority: _priority,
+                quadrant: _quadrant,
+                onDueDateChanged: (date) => setState(() => _dueDate = date),
+                onPriorityChanged: (p) => setState(() => _priority = p),
+                onQuadrantChanged: (q) => setState(() => _quadrant = q),
+              ),
+              const Gap(AppDimensions.paddingXl),
+              FilledButton.icon(
+                onPressed: _isLoading ? null : _save,
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.check),
+                label: Text(_isEditing ? AppStrings.save : '创建任务'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -198,10 +216,13 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
           title: title,
           description: _descCtrl.text.trim(),
           dueDate: _dueDate,
+          quadrant: _quadrant,
+          priority: _priority,
         );
       }
 
       if (mounted) {
+        FocusScope.of(context).unfocus();
         context.pop();
       }
     } catch (e) {
@@ -245,7 +266,10 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
     if (widget.taskId == null) return;
     try {
       await ref.read(taskActionsProvider.notifier).deleteTask(widget.taskId!);
-      if (mounted) context.pop();
+      if (mounted) {
+        FocusScope.of(context).unfocus();
+        context.pop();
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
